@@ -1,0 +1,17 @@
+services:
+  gui_web:
+    
+    build: .  # <--- Esto le dice: "Usa el Dockerfile de esta carpeta"
+    container_name: apache_gui_separado
+    ports:
+      - "8082:80" # Usamos el puerto 8082 para no chocar con el 8080 del primero
+    volumes:
+      - ./www:/var/www/html
+    networks:
+      - plantilla_web_red_ingenieria
+
+networks:
+  # Declaramos que la red ya existe y fue creada por el otro proyecto
+  plantilla_web_red_ingenieria:
+    external: true
+

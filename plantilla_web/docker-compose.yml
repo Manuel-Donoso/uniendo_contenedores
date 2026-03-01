@@ -1,0 +1,48 @@
+services:
+  # Servidor Web Apache + PHP
+  web:
+    image: php:8.2-apache
+    container_name: apache_server
+    ports:
+      - "8080:80"
+    volumes:
+      - ./www:/var/www/html
+    networks:
+      - red_ingenieria
+
+  # Base de Datos MySQL (El motor de datos)
+  db:
+    image: mysql:8.0
+    container_name: mysql_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: password_imperial
+
+      MYSQL_USER: manuel
+      MYSQL_PASSWORD: manuel
+      MYSQL_DATABASE: api
+
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./db_data:/var/lib/mysql
+    networks:
+      - red_ingenieria
+
+  # Interfaz visual para la BD
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: pma_visual
+    links:
+      - db
+    environment:
+      PMA_HOST: db
+      PMA_ARBITRARY: 1
+    ports:
+      - "8081:80"
+    networks:
+      - red_ingenieria
+
+networks:
+  red_ingenieria:
+    driver: bridge
